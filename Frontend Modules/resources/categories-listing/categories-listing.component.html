@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-md-6">
+    <app-content-header
+      [heading]="'Resource Categories'"
+      [subHeading]="LISTING_TEXT"
+    >
+    </app-content-header>
+  </div>
+
+  <div class="col-md-6">
+    <button
+      *ngIf="!reordering"
+      [routerLink]="'/resource-categories/create'"
+      class="btn btn-primary white float-right header-button px-2"
+    >
+      <i class="fa fa-plus"></i>
+      Add Category
+    </button>
+    <a
+      *ngIf="!reordering && resourceCategories.length"
+      (click)="allowReordering()"
+      class="btn btn-primary white float-right header-button px-2"
+    >
+      <i class="fa fa-reorder"></i>
+      Reorder Categories</a
+    >
+    <button
+      *ngIf="reordering"
+      (click)="saveReordering()"
+      class="btn btn-primary white float-right header-button px-2"
+    >
+      Save Reordering
+    </button>
+    <div
+      *ngIf="reordering"
+      class="content-sub-header primary-color font-small-3 drap-drop-text"
+    >
+      {{ "(" + DRAGDROP_TEXT + ")" }}
+    </div>
+  </div>
+</div>
+
+<app-categories-table
+  *ngIf="!reordering"
+  [resourceCategories]="resourceCategories"
+  (page)="getResourceCategories($event)"
+  (resourceCategoryId)="deleteResourceCategory($event)"
+  [loading]="loading"
+  #categoriesTable
+></app-categories-table>
+<app-reorder-categories
+  *ngIf="reordering"
+  [resourceCategories]="resourceCategories"
+  (saveChanges)="cancelReordering($event)"
+  (cancelReordering)="cancelReordering($event)"
+  [loading]="loading"
+  #reorderResources
+></app-reorder-categories>

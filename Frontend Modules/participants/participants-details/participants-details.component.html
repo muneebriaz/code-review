@@ -1,0 +1,56 @@
+<app-content-header
+  [isBack]="true"
+  [heading]="(participant?.name || 'Participant') + '\'s Details'"
+  [subHeading]="'Participant Details'"
+>
+</app-content-header>
+
+<section id="tabs">
+  <div class="row text-left">
+    <div class="col-md-12 col-lg-12 mt-0">
+      <div class="card">
+        <div class="card-content bg-secondary-color">
+          <div class="card-body">
+            <ngb-tabset>
+              <ngb-tab title="Basic Info" id="basicInfo">
+                <ng-template ngbTabContent>
+                  <app-participant-basic
+                    [participant]="participant"
+                  ></app-participant-basic>
+                </ng-template>
+              </ngb-tab>
+              <ngb-tab title="Program" id="program">
+                <ng-template ngbTabContent>
+                  <app-participant-program
+                    [participant]="participant"
+                  ></app-participant-program>
+                </ng-template>
+              </ngb-tab>
+              <ngb-tab title="Participant Responses" id="participantResponses">
+                <ng-template ngbTabContent>
+                  <app-participant-questionnaire
+                    [status]="participant.status"
+                  ></app-participant-questionnaire>
+                </ng-template>
+              </ngb-tab>
+              <ngb-tab
+                title="Surgeons"
+                id="surgeon"
+                *ngIf="userRole === ROLES.ADMIN"
+              >
+                <ng-template ngbTabContent>
+                  <app-participant-surgeons></app-participant-surgeons>
+                </ng-template>
+              </ngb-tab>
+              <ngb-tab title="Alert History" id="alertHistory">
+                <ng-template ngbTabContent>
+                  <app-participant-alerts></app-participant-alerts>
+                </ng-template>
+              </ngb-tab>
+            </ngb-tabset>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

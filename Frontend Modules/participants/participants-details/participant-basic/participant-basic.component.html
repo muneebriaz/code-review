@@ -1,0 +1,290 @@
+<section id="basic">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card bg-secondary-color" *ngIf="participant">
+        <div class="card-body">
+          <div class="card-block">
+            <form class="form form-horizontal" #f="ngForm">
+              <!-- personal details -->
+              <div class="form-body">
+                <div
+                  class="row primary-color font-small-5 text-bold-500 details"
+                >
+                  Personal Details
+                </div>
+                <div class="row mt-2">
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="participantName" class="primary-color"
+                        >FULL NAME:
+                        <span class="danger font-small-5">*</span></label
+                      >
+                      <input
+                        type="text"
+                        id="participantName"
+                        name="participantName"
+                        placeholder="Name"
+                        class="form-control primary-color"
+                        [(ngModel)]="participant.name"
+                        required
+                        [disabled]="userRole === ROLES.SURGEON"
+                        #participantName="ngModel"
+                      />
+                      <small
+                        class="form-text text-muted danger"
+                        *ngIf="
+                          !participantName.value &&
+                          (participantName.touched || participantName.valid)
+                        "
+                      >
+                        {{ required_field_Error }}</small
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-2">
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="participantDOB" class="primary-color"
+                        >DATE OF BIRTH:</label
+                      >
+                      <input
+                        type="date"
+                        id="participantDOB"
+                        name="participantDOB"
+                        placeholder="Date of Birth"
+                        class="form-control primary-color"
+                        [placeholder]="participant.dob"
+                        [(ngModel)]="participant.dob"
+                        required
+                        [disabled]="userRole === ROLES.SURGEON"
+                        #participantDOB="ngModel"
+                        [max]="getToday()"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <!-- personal details ends -->
+
+                <!-- contact details -->
+                <div
+                  class="row primary-color font-small-5 text-bold-500 details mt-4"
+                >
+                  Contact Details
+                </div>
+                <div class="row mt-2">
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="participantEmail" class="primary-color"
+                        >EMAIL:</label
+                      >
+                      <input
+                        type="text"
+                        id="participantEmail"
+                        name="participantEmail"
+                        placeholder="Email"
+                        class="form-control primary-color"
+                        [(ngModel)]="participant.email"
+                        required
+                        #participantEmail="ngModel"
+                        disabled
+                      />
+                    </div>
+                    <div class="form-group m-0">
+                      <label for="participantPhone" class="primary-color"
+                        >PHONE:</label
+                      >
+                      <input
+                        type="text"
+                        id="participantPhone"
+                        name="participantPhone"
+                        placeholder="Phone"
+                        class="form-control primary-color"
+                        [(ngModel)]="participant.phone"
+                        required
+                        [disabled]="userRole === ROLES.SURGEON"
+                        #participantPhone="ngModel"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="participantAddress" class="primary-color"
+                        >ADDRESS:</label
+                      >
+                      <textarea
+                        type="text"
+                        id="participantAddress"
+                        rows="4"
+                        name="participantAddress"
+                        placeholder="Address"
+                        class="form-control primary-color"
+                        [(ngModel)]="participant.address.streetAddress"
+                        required
+                        [disabled]="userRole === ROLES.SURGEON"
+                        #participantAddress="ngModel"
+                      ></textarea>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group m-0">
+                          <label for="participantCity" class="primary-color"
+                            >CITY:</label
+                          >
+                          <input
+                            type="text"
+                            id="participantCity"
+                            name="participantCity"
+                            placeholder="City"
+                            [disabled]="userRole === ROLES.SURGEON"
+                            class="form-control primary-color"
+                            [(ngModel)]="participant.address.city"
+                            #participantCity="ngModel"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group m-0">
+                          <label for="addressZip" class="primary-color"
+                            >ZIP:</label
+                          >
+                          <input
+                            type="text"
+                            id="addressZip"
+                            name="addressZip"
+                            class="form-control primary-color"
+                            [(ngModel)]="participant.address.zip"
+                            placeholder="ZIP"
+                            #addressZip="ngModel"
+                            [disabled]="userRole === ROLES.SURGEON"
+                            [pattern]="zipValidator"
+                          />
+                          <small
+                            class="form-text text-muted danger"
+                            *ngIf="
+                              addressZip.invalid &&
+                              addressZip.dirty &&
+                              addressZip.value
+                            "
+                          >
+                            {{ "Enter valid ZIP code" }}</small
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group m-0">
+                          <label for="participantState" class="primary-color"
+                            >STATE:</label
+                          >
+                          <select
+                            type="text"
+                            id="participantState"
+                            name="participantState"
+                            [disabled]="userRole === ROLES.SURGEON"
+                            class="form-control primary-color"
+                            [(ngModel)]="participant.address.state"
+                            #participantState="ngModel"
+                          >
+                            <option
+                              *ngFor="let state of states"
+                              [value]="state.stateCode"
+                              >{{ state.state }}</option
+                            >
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- contact details ends -->
+
+                <!-- partner details -->
+                <!-- TODO: Partner details need to be cleared -->
+                <div
+                  class="row primary-color font-small-5 text-bold-500 details mt-4"
+                >
+                  Partner Details
+                </div>
+                <div class="row mt-2">
+                  <div class="col-md-5 p-0">
+                    <span
+                      class="primary-color font-small-3"
+                      *ngIf="!participant?.isLinked"
+                      >(Partner not linked)</span
+                    >
+                    <div class="card" *ngIf="participant?.isLinked">
+                      <div class="card-content">
+                        <div class="px-3 py-3">
+                          <div class="media">
+                            <div class="media-body text-left">
+                              <p class="mb-1 primary-color font-medium-2">
+                                {{ participant?.linkedPartner?.name }}
+                              </p>
+                              <span class="font-small-3 primary-color">
+                                {{ participant?.linkedPartner?.email }}
+                              </span>
+                              <p class="font-small-2 primary-color mb-0">
+                                <code class="text-bold-500">
+                                  ({{
+                                    participant?.linkedPartner?.status
+                                      | titlecase
+                                  }})</code
+                                >
+                              </p>
+                            </div>
+                            <div
+                              class="media-right align-self-center"
+                              *ngIf="userRole !== ROLES.SURGEON"
+                            >
+                              <button
+                                class="{{ STYLES.SECONDARY_BTN }}"
+                                [routerLink]="[
+                                  '/participants',
+                                  participant?.linkedPartner?._id
+                                ]"
+                              >
+                                Go to profile
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- partner details ends -->
+              </div>
+            </form>
+          </div>
+          <div class="row mt-4 mb-3" *ngIf="userRole !== ROLES.SURGEON">
+            <div class="col-md-9 p-0">
+              <button
+                (click)="formSubmitted()"
+                class="font-small-3 btn btn-primary px-2"
+              >
+                Update Participant
+              </button>
+            </div>
+            <div class="col-md-3 p-0">
+              <a
+                (click)="suspendUser()"
+                class="tertiary-color float-right font-small-3 text-bold-500"
+              >
+                <span *ngIf="participant.status === 'active'"
+                  >SUSPEND PARTICPANT</span
+                >
+                <span *ngIf="participant.status === 'suspended'"
+                  >ACTIVE PARTICPANT</span
+                ></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

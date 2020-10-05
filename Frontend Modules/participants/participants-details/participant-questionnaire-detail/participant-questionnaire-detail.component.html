@@ -1,0 +1,108 @@
+<section id="horizontal-form-layouts">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-block">
+            <a
+              class="btn btn-flat font-small-3 tertiary-color mb-2 p-0"
+              (click)="back()"
+            >
+              <span>
+                <i class="fa fa-angle-left tertiary-color"></i>
+                Back to Response List
+              </span></a
+            >
+            <br />
+            <b
+              class="primary-color font-small-4 pt-2 text-bold-500"
+              *ngIf="!loading"
+            >
+              {{ participantQuestionnaire?.stage?.name }} :
+              {{ participantQuestionnaire?.title }}</b
+            >
+            <p class="primary-color" *ngIf="loading">Loading...</p>
+            <br />
+            <div class="row" *ngIf="!loading">
+              <div class="col-md-1 pt-1">
+                <ngb-progressbar
+                  type="tertiary-color bg-tertiary-color"
+                  [value]="
+                    (participantQuestionnaire.attemptQuestions /
+                      participantQuestionnaire.totalQuestions) *
+                    100
+                  "
+                  class="progress-bar-md "
+                >
+                </ngb-progressbar>
+              </div>
+              <div class="col-md-2 pl-0 pt-0">
+                <span class="primary-color font-small-3">
+                  {{ participantQuestionnaire.attemptQuestions || 0 }} /
+                  {{ participantQuestionnaire.totalQuestions || 0 }}</span
+                >
+              </div>
+            </div>
+
+            <div class="media-body text-left">
+              <div
+                *ngFor="let question of participantQuestionnaire?.questions"
+                class="border-bottom mt-2 py-3"
+              >
+                <b class="primary-color font-small-5 text-bold-500">
+                  {{ question.text }}
+                </b>
+                <div *ngIf="question.type === QUESTION_TYPE.OPEN" class="mt-1">
+                  <span class="primary-color pt-2 font-small-3">
+                    {{ question?.answer?.text || "Not Answered" }}
+                  </span>
+                </div>
+                <div *ngIf="question.type === QUESTION_TYPE.PAIN" class="mt-1">
+                  <span
+                    class="primary-color mt-1"
+                    *ngIf="question?.answer?.pain !== undefined"
+                  >
+                    <img src="{{ PAIN_ICONS[question?.answer?.pain] }}" />
+                  </span>
+                </div>
+                <div
+                  *ngIf="question.type === QUESTION_TYPE.RATING"
+                  class="mt-1"
+                >
+                  <span class="primary-color mt-1 font-small-3">
+                    {{ question?.answer?.rating || "Not Answered" }}
+                  </span>
+                </div>
+                <div *ngIf="question.type === QUESTION_TYPE.MCQ" class="mt-1">
+                  <ng-container *ngFor="let option of question.options">
+                    <ng-container
+                      *ngIf="
+                        option?._id === question?.answer?.option;
+                        else notExist
+                      "
+                    >
+                      <i class="tertiary-color ft-check"></i>
+                      <label class="ml-1 font-small-3 primary-color">
+                        {{ option?.text }}
+                      </label>
+                    </ng-container>
+
+                    <ng-template #notExist>
+                      <i class="white ft-check"></i>
+                      <label class="ml-1 text-muted font-small-3 mb-1 ">
+                        {{ option?.text }}
+                      </label>
+                    </ng-template>
+
+                    <br />
+                  </ng-container>
+                </div>
+                <br />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

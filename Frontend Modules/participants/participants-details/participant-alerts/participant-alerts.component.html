@@ -1,0 +1,100 @@
+<div [hidden]="showDetail">
+  <section id="extended">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-body bg-secondary-color">
+            <div class="card-block">
+              <table class="table table-responsive-md text-center">
+                <thead class="primary-color bg-secondary-color font-small-1">
+                  <tr>
+                    <th>ALERT MESSAGE</th>
+                    <th>ALERT LEVEL</th>
+                    <th>DATE SENT</th>
+                    <th>LAST UPDATED</th>
+                    <th>ACTION TAKEN</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let alert of participantsAlerts">
+                    <td>
+                      <a
+                        (click)="showAlertsDetail(alert?._id)"
+                        class="tertiary-color"
+                        >{{ alert?.questionAlert?.text }}</a
+                      >
+                    </td>
+                    <td>{{ alert?.questionAlert?.priority }}</td>
+                    <td>
+                      {{ alert?.questionAlert?.createdAt | date: "medium" }}
+                    </td>
+                    <td>
+                      {{ alert?.questionAlert?.updatedAt | date: "medium" }}
+                    </td>
+                    <td class="text-center">
+                      <select
+                        type="text"
+                        id="participantState"
+                        name="participantState"
+                        [(ngModel)]="alert.status"
+                        (change)="updateStatus($event, alert)"
+                        class="form-control primary-color"
+                        [value]=""
+                      >
+                        <option disabled selected value="undefined"
+                          >Needs Action</option
+                        >
+                        <option
+                          *ngFor="let action of alertActions"
+                          [value]="action._id"
+                          >{{ action.value }}
+                        </option>
+                      </select>
+                    </td>
+                    <td class="mt-3">
+                      <a
+                        (click)="showAlertsDetail(alert?._id)"
+                        class="primary-color"
+                        title="Detail"
+                      >
+                        <i class="ft-eye mr-2 font-medium-3"></i>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr *ngIf="loading">
+                    <td colspan="8" class="blue-text">Loading...</td>
+                  </tr>
+                  <tr *ngIf="!loading && participantsAlerts.length === 0">
+                    <td colspan="8" class="blue-text">
+                      No alerts found
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <ngb-pagination
+                class="d-flex justify-content-center pt-3"
+                *ngIf="!loading && pagination.totalPages > 1"
+                [(collectionSize)]="pagination.total"
+                [(page)]="pagination.page"
+                [(maxSize)]="pgConfig.maxSize"
+                [(rotate)]="pgConfig.rotate"
+                [(boundaryLinks)]="pgConfig.boundaryLinks"
+                [(size)]="pgConfig.size"
+                (pageChange)="getParticipantAlert($event)"
+              ></ngb-pagination>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div *ngIf="showDetail">
+  <app-participant-alert-detail
+    #participantAlertDetail
+    (backToResponse)="backToResponse($event)"
+    [alertDetail]="alertDetail"
+  ></app-participant-alert-detail>
+</div>

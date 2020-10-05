@@ -1,0 +1,56 @@
+<div class="bg-secondary-color">
+  <div class="modal-header">
+    <h4 class="modal-title primary-color">Preview Resource</h4>
+  </div>
+  <div class="modal-body">
+    <form class="form form-horizontal" #form="ngForm">
+      <div class="form-body">
+        <div *ngIf="resource" class="row">
+          <div class="col-md-12 primary-color font-small-3">
+            {{ resource.type | uppercase }}
+          </div>
+          <div class="col-md-12 primary-color font-medium-3 text-bold-500">
+            {{ resource.headline | titlecase }}
+          </div>
+          <div class="col-md-12 mt-4" *ngIf="resource.type === 'video'">
+            <iframe
+              [src]="safeURL"
+              frameborder="0"
+              class="video-resource"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <div
+            class="col-md-12 mt-4 text-center"
+            *ngIf="resource.type === 'article'"
+          >
+            <img [src]="resource.media" class="h-200" />
+          </div>
+          <ng-container *ngFor="let rc of resource.resourceContent">
+            <div
+              class="col-md-12 text-center mt-4"
+              *ngIf="rc.type === CONTENT_TYPES.IMAGE"
+            >
+              <img [src]="rc.value" class="h-200" />
+            </div>
+            <div
+              *ngIf="rc.type === CONTENT_TYPES.PARAGRAPH"
+              class="col-md-12 mt-4 primary-color"
+              [innerHTML]="rc.value"
+            ></div>
+          </ng-container>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="font-small-3 btn float-left btn-primary px-2"
+      (click)="close()"
+    >
+      Close
+    </button>
+  </div>
+</div>

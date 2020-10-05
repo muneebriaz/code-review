@@ -1,0 +1,78 @@
+<div class="bg-secondary-color">
+  <div class="modal-header">
+    <h4 class="modal-title primary-color">
+      {{ noteId ? "Update" : "Add" }} Note
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form class="form form-horizontal" #form="ngForm">
+      <div class="form-body">
+        <div class="row">
+          <div class="ml-3 col-md-12">
+            <label class=" label-control primary-color" for="subject"
+              >SUBJECT:</label
+            >
+
+            <div class="form-group row">
+              <div class="col-md-10">
+                <input
+                  type="text"
+                  id="noteSubject"
+                  name="noteSubject"
+                  [(ngModel)]="note.title"
+                  class="form-control primary-color"
+                  #noteSubject
+                />
+                <span
+                  *ngIf="isFormSubmitted && !noteSubject.value"
+                  class="font-small-2 danger mt-0"
+                  >{{ DEFAULT_REQUIRED_FIELD_ERROR }}</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="ml-3 col-md-12">
+            <label class="label-control primary-color" for="content"
+              >CONTENT:</label
+            >
+            <div class="form-group row">
+              <div class="col-md-10">
+                <textarea
+                  type="text"
+                  id="noteContent"
+                  name="noteContent"
+                  [(ngModel)]="note.content"
+                  class="form-control primary-color"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      (click)="formSubmit()"
+      [disabled]="loading"
+      class="font-small-3 btn  float-left btn-primary px-2"
+    >
+      {{ noteId ? "Update" : "Add" }} Note
+    </button>
+    <button
+      type="button"
+      class="btn btn-secondary btn-raised"
+      (click)="close()"
+    >
+      Cancel
+    </button>
+  </div>
+</div>

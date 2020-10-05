@@ -1,0 +1,41 @@
+.btn-primary {
+  background-color: var(--theme-primary-color) !important;
+  border-color: var(--theme-primary-color) !important;
+}
+
+.plr-0 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.w-50 {
+  width: 50%;
+}
+.separator-line {
+  border-bottom: 1px solid #ccc;
+  line-height: 0.1em;
+  margin: 10px 0 20px;
+  display: flex;
+  justify-content: center;
+  .btns {
+    padding: 0 10px;
+    display: inline-block;
+    position: absolute;
+    top: -2px;
+  }
+}
+
+.custom-file-input-content{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 29px;
+  height: 26px;
+  opacity: 0;
+  cursor: pointer !important;
+}
+
+
+.lft-40{
+  left: 40px !important; 
+}

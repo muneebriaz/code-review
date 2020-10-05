@@ -1,0 +1,121 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="bg-secondary-color-light2 card-body pb-0">
+        <div class="card-block">
+          <a
+            class="btn btn-flat font-small-3 tertiary-color mb-2 p-0"
+            (click)="back()"
+          >
+            <span>
+              <i class="fa fa-angle-left tertiary-color"></i>
+              Back to Alerts History
+            </span></a
+          >
+          <br />
+
+          <b class="primary-color font-small-4 pt-2 text-bold-500">
+            {{ alertDetail?.questionAlert?.text }}</b
+          >
+
+          <a class="float-right">
+            <select
+              type="text"
+              [(ngModel)]="alertDetail.status"
+              (change)="updateStatus($event, alertDetail._id)"
+              class="form-control float-right primary-color"
+            >
+              <option disabled selected value="undefined">Needs Action</option>
+              <option *ngFor="let action of alertActions" [value]="action._id"
+                >{{ action.value }}
+              </option>
+            </select>
+          </a>
+        </div>
+      </div>
+      <div class="bg-secondary-color-light1  card-body">
+        <div class="card-block">
+          <div class="row">
+            <div class="col-md-2">
+              <b class="primary-color font-small-3 text-bold-500">ALERT LEVEL</b
+              ><br />
+              <span class="primary-color">
+                {{ alertDetail?.questionAlert?.priority }}
+              </span>
+            </div>
+            <div class="col-md-3">
+              <b class="primary-color font-small-3 text-bold-500">DATE SENT</b
+              ><br />
+              <span class="primary-color">
+                {{ alertDetail?.questionAlert?.createdAt | date: "medium" }}
+              </span>
+            </div>
+
+            <div class="col-md-3">
+              <b class="primary-color font-small-3 text-bold-500"
+                >LAST UPDATED</b
+              ><br />
+              <span class="primary-color">
+                {{ alertDetail?.questionAlert?.updatedAt | date: "medium" }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body bg-secondary-color">
+        <div class="card-block">
+          <table class="table table-responsive-md text-center">
+            <thead class="primary-color bg-secondary-color font-small-1">
+              <tr>
+                <th>#</th>
+                <th>NOTE TITLE</th>
+                <th>NOTE CONTENT</th>
+                <th>LAST UPDATED</th>
+                <th>CREATED</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let note of alertDetail?.notes; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <a class="tertiary-color">{{ note.title }}</a>
+                </td>
+                <td>{{ note.content }}</td>
+                <td>{{ note.updatedAt | date: "medium" }}</td>
+                <td>{{ note.createdAt | date: "medium" }}</td>
+                <td>
+                  <a
+                    class="primary-color"
+                    title="Edit"
+                    (click)="addNote(note._id, note)"
+                  >
+                    <i class="ft-edit mr-2 font-medium-3"></i>
+                  </a>
+                  <a
+                    class="primary-color"
+                    (click)="deleteNote(note._id, i)"
+                    title="Delete"
+                  >
+                    <i class="ft-trash-2 mr-2 font-medium-3"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr *ngIf="alertDetail?.notes?.length === 0">
+                <td colspan="8" class="blue-text">
+                  No alerts notes found
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button (click)="addNote()" class="font-small-3 btn btn-primary px-2">
+            Add Note
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

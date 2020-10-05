@@ -1,0 +1,119 @@
+<section id="extended">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body bg-secondary-color">
+          <div class="card-block">
+            <table class="table table-responsive-md text-center">
+              <thead class="primary-color bg-secondary-color font-small-1">
+                <tr>
+                  <th>#</th>
+                  <th>NAME</th>
+                  <th>APPLICABLE</th>
+                  <th>RESOURCES</th>
+                  <th>PICTURE</th>
+                  <th>UPDATED AT</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let resourceCategory of resourceCategories;
+                    let i = index
+                  "
+                >
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <a
+                      class="tertiary-color"
+                      [routerLink]="[
+                        '/resource-categories',
+                        resourceCategory._id,
+                        'resources'
+                      ]"
+                      >{{ resourceCategory.name }}</a
+                    >
+                  </td>
+                  <td>
+                    {{ (resourceCategory.applicable | titlecase) || "-" }}
+                  </td>
+                  <td>{{ resourceCategory.resourcesCount || "0" }}</td>
+                  <td>
+                    <img
+                      *ngIf="resourceCategory.picture"
+                      [src]="resourceCategory.picture"
+                      height="60"
+                      width="60"
+                    /><span *ngIf="!resourceCategory.picture">-</span>
+                  </td>
+                  <td>{{ resourceCategory.updatedAt | date: "medium" }}</td>
+                  <td>
+                    <ng-container *ngIf="resourceCategory.group">
+                      <a
+                        class="p-0 primary-color"
+                        [routerLink]="[
+                          '/resource-categories',
+                          resourceCategory._id
+                        ]"
+                        title="Edit"
+                      >
+                        <i class="ft-edit mr-2 font-medium-3"></i>
+                      </a>
+                      <a
+                        class="p-0 primary-color"
+                        title="Delete"
+                        (click)="delete(resourceCategory._id)"
+                      >
+                        <i class=" ft-trash-2 mr-2 font-medium-3"></i>
+                      </a>
+                    </ng-container>
+                    <ng-container *ngIf="!resourceCategory.group">
+                      <a
+                        class="p-0 primary-color"
+                        title="You can't edit resources of super admin"
+                      >
+                        <i
+                          style="color: grey;"
+                          class="ft-edit mr-2 font-medium-3"
+                        ></i>
+                      </a>
+                      <a
+                        class="p-0 primary-color"
+                        title="You can't delete resources of super admin"
+                      >
+                        <i
+                          style="color: grey;"
+                          class=" ft-trash-2 mr-2 font-medium-3"
+                        ></i>
+                      </a>
+                    </ng-container>
+                  </td>
+                </tr>
+                <tr *ngIf="loading">
+                  <td colspan="7" class="blue-text">Loading...</td>
+                </tr>
+                <tr *ngIf="!loading && resourceCategories.length == 0">
+                  <td colspan="7" class="blue-text">
+                    No resource categories found
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <ngb-pagination
+              class="d-flex justify-content-center pt-3"
+              *ngIf="!loading && pagination.totalPages > 1"
+              [(collectionSize)]="pagination.total"
+              [(page)]="pagination.page"
+              [(maxSize)]="pgConfig.maxSize"
+              [(rotate)]="pgConfig.rotate"
+              [(boundaryLinks)]="pgConfig.boundaryLinks"
+              [(size)]="pgConfig.size"
+              (pageChange)="changePage($event)"
+            ></ngb-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,67 @@
+<table class="table table-responsive-md text-center">
+  <ng-container *ngIf="linked"> </ng-container>
+  <thead class="primary-color bg-secondary-color font-small-1">
+    <tr>
+      <th>#</th>
+      <th>NAME</th>
+      <th>EMAIL</th>
+      <th>PHONE</th>
+      <ng-container *ngIf="linked">
+        <th>LINKED AT</th>
+        <th>DEFAULT</th>
+      </ng-container>
+      <th>ACTIONS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let surgeon of surgeons; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ surgeon.name }}</td>
+      <td>{{ surgeon.email }}</td>
+      <td>{{ surgeon.phone || "-" }}</td>
+      <ng-container *ngIf="linked">
+        <td>{{ surgeon.linkedAt | date: "medium" }}</td>
+        <td>
+          <span
+            *ngIf="surgeon.isDefault"
+            class="badge badge-pill badge-success"
+          >
+            Default
+          </span>
+          <button
+            *ngIf="!surgeon.isDefault"
+            (click)="makeSurgeonDefault.emit(surgeon._id)"
+            class="{{ SECONDARY_BTN }} btn-sm"
+          >
+            Set Default
+          </button>
+        </td>
+      </ng-container>
+      <td>
+        <a
+          *ngIf="!linked"
+          class="primary-color"
+          title="link"
+          (click)="link(surgeon._id)"
+        >
+          <i class="ft-link mr-2 font-medium-3"></i>
+        </a>
+        <a
+          *ngIf="linked"
+          class="primary-color ml-1"
+          title="unlink"
+          (click)="unlink(surgeon._id)"
+        >
+          <i class="ft-unlock mr-2 font-medium-3"></i>
+        </a>
+      </td>
+    </tr>
+    <tr *ngIf="loading">
+      <ng-container *ngIf="linked"> </ng-container>
+      <td colspan="7" class="blue-text">Loading...</td>
+    </tr>
+    <tr *ngIf="!loading && surgeons.length === 0">
+      <td colspan="7" class="blue-text">No surgeons found</td>
+    </tr>
+  </tbody>
+</table>

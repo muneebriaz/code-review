@@ -1,0 +1,321 @@
+<form class="form form-horizontal" #f="ngForm">
+  <!-- resource details -->
+  <fieldset [disabled]="resourceId && !resource.group">
+    <div class="form-body">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="resourceType" class="primary-color">TYPE:</label>
+            <select
+              type="text"
+              id="resourceType"
+              name="resourceType"
+              class="form-control primary-color"
+              [(ngModel)]="resource.type"
+              (change)="changeResourceType(resource.type)"
+              [disabled]="resourceId"
+              #resourceType="ngModel"
+            >
+              <option
+                *ngFor="let resourceType of resourceTypes | keyvalue"
+                [value]="resourceType.value"
+                [selected]="resource.type === true"
+                >{{ resourceType.key | titlecase }}</option
+              >
+            </select>
+          </div>
+        </div>
+        <div class="col-md-7">
+          <div class="form-group">
+            <label for="resourceHeadline" class="primary-color"
+              >HEADLINE:</label
+            >
+            <input
+              type="text"
+              id="resourceHeadline"
+              name="resourceHeadline"
+              placeholder="Headline"
+              class="form-control primary-color"
+              [(ngModel)]="resource.headline"
+              #resourceHeadline="ngModel"
+              required
+            />
+            <small
+              class="form-text text-muted danger"
+              *ngIf="
+                resourceHeadline.invalid &&
+                (isFormSubmitted || resourceHeadline.touched)
+              "
+            >
+              {{ required_field_Error }}</small
+            >
+          </div>
+        </div>
+      </div>
+      <ng-container>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <ng-container
+                *ngIf="
+                  resource.type === 'article' || resource.type === 'article'
+                "
+              >
+                <label class="label-control primary-color" for="applicable"
+                  >Image: <span class="danger font-small-5">*</span></label
+                >
+                <fieldset class="form-group">
+                  <div class="custom-file mx-auto d-block">
+                    <input
+                      type="file"
+                      class="custom-file-input"
+                      id="custom-input"
+                      onclick="this.value = null"
+                      (change)="openMediaModal($event)"
+                    />
+                    <label
+                      class="custom-file-label primary-color"
+                      for="custom-input"
+                      >Upload Image</label
+                    >
+                    <small
+                      class="form-text text-muted danger"
+                      *ngIf="!resource.media && isFormSubmitted"
+                      >{{ required_field_Error }}</small
+                    >
+                  </div>
+                </fieldset>
+              </ng-container>
+              <ng-container *ngIf="resource.type === 'video'">
+                <label for="resourceMedia" class="primary-color"
+                  >VIDEO URL: <span class="danger font-small-5">*</span></label
+                >
+                <input
+                  type="text"
+                  id="resourceMedia"
+                  name="resourceMedia"
+                  placeholder="Video URL"
+                  class="form-control primary-color"
+                  [(ngModel)]="resource.media"
+                  #resourceMedia="ngModel"
+                  required
+                />
+                <small
+                  class="form-text text-muted danger"
+                  *ngIf="
+                    resourceMedia.invalid &&
+                    (isFormSubmitted || resourceMedia.touched)
+                  "
+                >
+                  {{ required_field_Error }}</small
+                >
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="col-md-4" *ngIf="!resourceId || resource.group">
+            <div class="form-group">
+              <label for="resourceLocation" class="primary-color"
+                >LOCATION:</label
+              >
+              <select
+                *ngIf="isDataLoaded"
+                type="text"
+                id="resourceLocation"
+                name="resourceLocation"
+                class="form-control primary-color"
+                [(ngModel)]="resource.location"
+                #resourceLocation="ngModel"
+              >
+                <option
+                  *ngFor="let location of locations"
+                  [value]="location._id"
+                  >{{ location.name }}</option
+                >
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="primary-color label-control" for="viewTime">
+                View Time (Minutes):
+              </label>
+              <input
+                id="viewTime"
+                name="viewTime"
+                class="primary-color form-control"
+                type="number"
+                min="1"
+                [(ngModel)]="resource.viewTime"
+                #viewTime="ngModel"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="row col-md-12"
+          *ngIf="resource.type === 'article' && resource.media != ''"
+        >
+          <div class="col-md-12 p-0">
+            <label class="primary-color">Current Image: </label>
+          </div>
+          <div class="col-md-6 p-0">
+            <div class="form-group row">
+              <div class="col-md-9">
+                <div class="row">
+                  <div class="col-md-12 col-12">
+                    <img [src]="resource.media" height="300" alt="unable to load image" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group mb-0">
+              <label for="resourceType" class="primary-color"
+                >DESCRIPTION</label
+              >
+            </div>
+          </div>
+        </div>
+        <div
+          class="row"
+          *ngFor="let rc of resource.resourceContent; let i = index"
+        >
+          <div
+            class="col-md-10 pb-2"
+            *ngIf="rc.type === RESOURCE_CONTENT_TYPES.PARAGRAPH"
+          >
+            <quill-editor
+              [styles]="{ height: '100px' }"
+              id="description{{ i }}"
+              name="description{{ i }}"
+              [modules]="modules"
+              [readOnly]="resourceId && !resource.group"
+              [(ngModel)]="rc.value"
+              (onEditorCreated)="setFocus($event)"
+              #description="ngModel"
+              required
+            ></quill-editor>
+          </div>
+          <div
+            class="col-md-10 pb-2 text-center"
+            *ngIf="rc.type === RESOURCE_CONTENT_TYPES.IMAGE"
+          >
+            <img [src]="rc.value" height="300" alt="unable to load image" />
+          </div>
+          <div class="col-md-2 pt-1">
+            <a
+              *ngIf="i > 0"
+              class="p-0 primary-color"
+              title="Remove"
+              (click)="removeItem(i)"
+            >
+              <i class="ft-trash-2 mr-2 font-medium-3 blue-text"></i>
+            </a>
+            <a
+              *ngIf="rc.type === RESOURCE_CONTENT_TYPES.IMAGE"
+              class="p-0 primary-color"
+              title="Change image"
+             
+            >
+            <input
+                  type="file"
+                  class="custom-file-input-content lft-40"
+                  id="custom-input"
+                  onclick="this.value = null"
+                  (change)="addResourceContent(RESOURCE_CONTENT_TYPES.IMAGE,
+                  i,
+                  true, $event)"
+                />
+              <i
+                class="fa fa-pencil-square-o mr-2 font-medium-3 blue-text"
+              ></i>
+            </a>
+          </div>
+          <div class="col-md-10 mt-3 mb-3">
+            <div class="separator-line">
+              <div class="btns bg-secondary-color">
+                <div
+                  class="btn-group btn-group-sm"
+                  role="group"
+                  aria-label="Button group with nested dropdown"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary"
+                    title="Add paragraph"
+                    (click)="
+                      addResourceContent(
+                        RESOURCE_CONTENT_TYPES.PARAGRAPH,
+                        i,
+                        false
+                      )
+                    "
+                  >
+                    <i class="fa fa-font blue-text"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary"
+                    title="Add image"
+                  
+                  >
+                  <input
+                  type="file"
+                  class="custom-file-input-content"
+                  id="custom-input"
+                  onclick="this.value = null"
+                  (change)="addResourceContent(RESOURCE_CONTENT_TYPES.IMAGE,
+                  i,
+                  false, $event)"
+                />
+                    <i class="fa fa-picture-o blue-text"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </fieldset>
+</form>
+<div class="row mt-2">
+  <div class="col-md-12">
+    <ng-container *ngIf="resourceId && resource.group">
+      <button
+        class="font-small-3 btn btn-primary px-2"
+        [disabled]="loading"
+        (click)="formSubmitted()"
+      >
+        Update Resource
+      </button>
+    </ng-container>
+    <ng-container *ngIf="!resourceId">
+      <button
+        [disabled]="loading"
+        (click)="formSubmitted()"
+        class="font-small-3 btn btn-primary px-2"
+      >
+        Add Resource
+      </button>
+    </ng-container>
+    <ng-container>
+      <button
+        [disabled]="loading"
+        type="button"
+        (click)="previewResource()"
+        class="font-small-3 btn btn-primary px-2 float-right"
+      >
+        Preview
+      </button>
+    </ng-container>
+  </div>
+</div>

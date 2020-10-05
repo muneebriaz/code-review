@@ -1,0 +1,75 @@
+<section id="extended">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body bg-secondary-color">
+          <div class="card-block reorder-block" #autoscroll2>
+            <table class="table table-responsive-md text-center">
+              <thead class="primary-color bg-secondary-color font-small-1">
+                <tr>
+                  <th></th>
+                  <th>#</th>
+                  <th>HEADLINE</th>
+                  <th>TYPE</th>
+                  <th>LOCATION</th>
+                  <th>PICTURE</th>
+                  <th>UPDATED AT</th>
+                </tr>
+              </thead>
+              <tbody [dragula]="DRAGDROP_ID" [(dragulaModel)]="resources">
+                <tr
+                  *ngFor="let resource of resources; let i = index"
+                  class="vertically-mid"
+                >
+                  <td><i class="fa fa-reorder fa-lg"></i></td>
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    {{
+                      resource.headline
+                        ? resource.headline.length > 25
+                          ? (resource.headline | slice: 0:25) + "..."
+                          : resource.headline
+                        : "-"
+                    }}
+                  </td>
+                  <td>{{ resource.type | titlecase }}</td>
+                  <td>{{ resource.location?.name || "-" }}</td>
+                  <td>
+                    <img
+                      *ngIf="resource.media"
+                      [src]="
+                        resource.type === 'article'
+                          ? resource.media
+                          : resource.thumbnail
+                      "
+                      height="60"
+                      width="60"
+                    />
+                    <span *ngIf="!resource.media">-</span>
+                  </td>
+                  <td>{{ resource.updatedAt | date: "medium" }}</td>
+                </tr>
+                <tr *ngIf="loading">
+                  <td colspan="7" class="blue-text">Loading...</td>
+                </tr>
+                <tr *ngIf="!loading && resources.length == 0">
+                  <td colspan="7" class="blue-text">
+                    No resources found
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <a (click)="cancel()" class="btn btn-primary white float-right px-2 ml-1">
+        Cancel</a
+      >
+      <a (click)="onSubmit()" class="btn btn-primary white float-right px-2">
+        Save Reordering</a
+      >
+    </div>
+  </div>
+</section>

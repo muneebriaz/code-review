@@ -1,0 +1,77 @@
+<div [hidden]="showDetail">
+  <ng-container *ngFor="let stage of STAGES | keyvalue">
+    <div class="{{ HEADING_WITH_BOTTOM }} mt-4">
+      {{ stage.value }}
+
+      <a
+        class="cursor-pointer float-right font-small-3 tertiary-color"
+        (click)="download(stage.value, '')"
+        title="Download Answers"
+      >
+        Download All
+      </a>
+    </div>
+
+    <div *ngIf="groupQuestionnaire[stage.value]; else notExist">
+      <div
+        class="card shadow bg-white my-2"
+        *ngFor="let question of groupQuestionnaire[stage.value]"
+      >
+        <div class="card-content border-line">
+          <div class="px-3 py-3">
+            <div class="media">
+              <div class="media-body text-left">
+                <b class="mb-1 primary-color">
+                  <a (click)="questionnaireDetail(question._id)">{{
+                    question.title
+                  }}</a></b
+                >
+                <br />
+
+                <div class="row" *ngIf="!loading">
+                  <div class="col-md-1 pt-1">
+                    <ngb-progressbar
+                      type="tertiary-color bg-tertiary-color"
+                      [value]="(question.attempted / question.total) * 100"
+                      class="progress-bar-md "
+                    >
+                    </ngb-progressbar>
+                  </div>
+                  <div class="col-md-2 pl-0">
+                    <span class="primary-color font-small-3">
+                      {{ question.attempted || 0 }} /
+                      {{ question.total || 0 }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="text-right">
+                <a
+                  class="primary-color ml-1"
+                  title="Download Answers"
+                  (click)="download('', question._id)"
+                >
+                  <i class="ft-arrow-down font-medium-3"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #notExist>
+      <div class="text-center mt-1">
+        <span class="primary-color message-css">{{
+          loading ? "Loading..." : "Questionnaires not available"
+        }}</span>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>
+
+<div [hidden]="!showDetail">
+  <app-participant-questionnaire-detail
+    #participantQuestionnaireDetail
+    (backToResponse)="backToResponse()"
+  ></app-participant-questionnaire-detail>
+</div>

@@ -1,0 +1,129 @@
+<form class="form form-horizontal" #f="ngForm">
+  <div class="form-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="categoryName" class="primary-color"
+            >NAME: <span class="danger font-small-5">*</span></label
+          >
+          <input
+            type="text"
+            id="categoryName"
+            name="categoryName"
+            placeholder="Name"
+            class="form-control primary-color"
+            [(ngModel)]="resourceCategory.name"
+            #categoryName="ngModel"
+            required
+          />
+          <small
+            class="form-text text-muted danger"
+            *ngIf="
+              categoryName.invalid && (isFormSubmitted || categoryName.touched)
+            "
+          >
+            {{ required_field_Error }}</small
+          >
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="categoryApplicable" class="primary-color"
+            >APPLICABLE:</label
+          >
+          <select
+            type="text"
+            id="categoryApplicable"
+            name="categoryApplicable"
+            class="form-control primary-color"
+            [(ngModel)]="resourceCategory.applicable"
+            #categoryApplicable="ngModel"
+          >
+            <option
+              *ngFor="let participantType of participantTypes | keyvalue"
+              [value]="participantType.value"
+              [selected]="resourceCategory.applicable === true"
+              >{{ participantType.key | titlecase }}</option
+            >
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="label-control primary-color" for="applicable"
+            >Image: <span class="danger font-small-5">*</span></label
+          >
+          <fieldset class="form-group">
+            <div class="custom-file mx-auto d-block">
+              <input
+                type="file"
+                class="custom-file-input"
+                id="custom-input"
+                onclick="this.value = null"
+                (change)="fileChangeListener($event)"
+              />
+              <label class="custom-file-label primary-color" for="custom-input"
+                >Choose Image</label
+              >
+            </div>
+            <small
+              class="form-text text-muted danger"
+              *ngIf="!resourceCategory.picture && !file && isFormSubmitted"
+            >
+              {{ required_field_Error }}</small
+            >
+          </fieldset>
+          <img-cropper
+            *ngIf="file"
+            [image]="data"
+            [settings]="cropperSettings"
+            class="float-left"
+            #cropper
+          >
+          </img-cropper>
+        </div>
+      </div>
+    </div>
+    <div class="row col-md-12" *ngIf="resourceCategory.picture">
+      <div class="col-md-12 p-0">
+        <label class="primary-color">Current Image: </label>
+      </div>
+      <div class="col-md-6 p-0">
+        <div class="form-group row">
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col-md-12 col-12">
+                <img [src]="resourceCategory.picture" alt="unable to load" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="row mt-2">
+  <div class="col-md-9">
+    <ng-container *ngIf="resourceId">
+      <button
+        class="font-small-3 btn btn-primary px-2"
+        [disabled]="loading"
+        (click)="formSubmitted()"
+      >
+        Update Category
+      </button>
+    </ng-container>
+    <ng-container *ngIf="!resourceId">
+      <button
+        [disabled]="loading"
+        (click)="formSubmitted()"
+        class="font-small-3 btn btn-primary px-2"
+      >
+        Add Category
+      </button>
+    </ng-container>
+  </div>
+</div>

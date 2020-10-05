@@ -1,0 +1,152 @@
+<section id="basic">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card bg-secondary-color" *ngIf="participant">
+        <div class="card-body">
+          <div class="card-block">
+            <form *ngIf="formLoaded" class="form form-horizontal" #f="ngForm">
+              <div class="row mt-2">
+                <div class="col-md-4">
+                  <div class="form-group m-0">
+                    <label for="stage" class="primary-color">STAGE:</label>
+                    <select
+                      type="text"
+                      id="stage"
+                      name="stage"
+                      class="form-control primary-color"
+                      [(ngModel)]="participant.stage._id"
+                      [disabled]="
+                        participant.type === PARTICIPANT_TYPES.SECONDARY ||
+                        userRole === ROLES.SURGEON
+                      "
+                    >
+                      <option
+                        *ngFor="let stage of stages"
+                        [value]="stage._id"
+                        [selected]="stage._id.selected == true"
+                        >{{ stage.name }}</option
+                      >
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="row primary-color font-small-5 text-bold-500 details pt-4"
+              ></div>
+              <div class="row mt-2">
+                <div class="col-md-4">
+                  <div class="form-group m-0">
+                    <label for="location" class="primary-color"
+                      >DELIVERY LOCATION:</label
+                    >
+                    <select
+                      [disabled]="
+                        participant.type === PARTICIPANT_TYPES.SECONDARY ||
+                        userRole === ROLES.SURGEON
+                      "
+                      *ngIf="isDataLoaded"
+                      type="text"
+                      id="location"
+                      name="location"
+                      class="form-control primary-color"
+                      [(ngModel)]="participant.location"
+                    >
+                      <option
+                        *ngFor="let location of locations"
+                        [value]="location._id"
+                        [selected]="location._id.selected == true"
+                        >{{ location.name }}</option
+                      >
+                    </select>
+                  </div>
+                  <div class="form-group m-0 pt-2">
+                    <label class="d-block primary-color">MEMEBER IS:</label>
+                    <div class="row col-md-12">
+                      <div
+                        class="custom-control custom-radio d-block float-left"
+                      >
+                        <input
+                          [disabled]="participant.isLinked"
+                          type="radio"
+                          id="birthMother"
+                          name="birthMother"
+                          class="custom-control-input"
+                          [checked]="primary"
+                          value="primary"
+                          [(ngModel)]="participant.type"
+                          #birthMother="ngModel"
+                        />
+                        <label
+                          class="custom-control-label primary-color"
+                          for="birthMother"
+                          >Birth mother</label
+                        >
+                      </div>
+                      <div
+                        class="custom-control custom-radio d-block float-left"
+                      >
+                        <input
+                          [disabled]="
+                            participant.isLinked || userRole === ROLES.SURGEON
+                          "
+                          type="radio"
+                          id="adoptivePartner"
+                          name="adoptivePartner"
+                          class="custom-control-input"
+                          [checked]="secondary"
+                          value="secondary"
+                          [(ngModel)]="participant.type"
+                          #adoptivePartner="ngModel"
+                        />
+                        <label
+                          class="custom-control-label primary-color"
+                          for="adoptivePartner"
+                          >Partner / adoptive partner</label
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group m-0">
+                    <label for="participantDOB" class="primary-color"
+                      >DATE OF SURGERY:</label
+                    >
+                    <input
+                      type="date"
+                      id="participantDOB"
+                      name="participantDOB"
+                      class="form-control primary-color"
+                      [placeholder]="participant.dateOfSurgery"
+                      [disabled]="
+                        participant.type === PARTICIPANT_TYPES.SECONDARY ||
+                        userRole === ROLES.SURGEON
+                      "
+                      [(ngModel)]="participant.dateOfSurgery"
+                      required
+                      #participantDOB="ngModel"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="row primary-color font-small-5 text-bold-500 details pt-4"
+              ></div>
+            </form>
+            <div class="row mt-4 mb-3" *ngIf="userRole !== ROLES.SURGEON">
+              <div class="col-md-9 p-0">
+                <button
+                  (click)="formSubmitted()"
+                  class="font-small-3 btn btn-primary px-2"
+                >
+                  Update Participant
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

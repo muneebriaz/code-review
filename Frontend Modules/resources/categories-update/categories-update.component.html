@@ -1,0 +1,24 @@
+<app-content-header
+  [isBack]="true"
+  [heading]="(resourceCategory.name || 'Resource') + ' Category'"
+  [subHeading]="'Edit Category Details'"
+>
+</app-content-header>
+
+<section id="horizontal-form-layouts">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card bg-secondary-color">
+        <div class="card-body">
+          <div class="card-block">
+            <app-resource-categories-form
+              [resourceCategory]="resourceCategory"
+              (updateResource)="updateResourceCategory($event)"
+            >
+            </app-resource-categories-form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

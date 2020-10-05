@@ -1,0 +1,316 @@
+<app-content-header
+  [isBack]="true"
+  [heading]="'Add Participant'"
+  [subHeading]="'Enter Participant Details'"
+>
+</app-content-header>
+<section id="horizontal-form-layouts">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card bg-secondary-color">
+        <div class="card-body">
+          <div class="card-block">
+            <form class="form form-horizontal" #f="ngForm">
+              <div class="form-body">
+                <div
+                  class="row primary-color font-small-5 text-bold-500 details"
+                >
+                  Personal Details
+                </div>
+                <div class="row mt-2">
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="participantName" class="primary-color"
+                        >FULL NAME:
+                        <span class="danger font-small-5">*</span></label
+                      >
+                      <input
+                        type="text"
+                        id="participantName"
+                        name="participantName"
+                        placeholder="Name"
+                        class="form-control primary-color"
+                        [(ngModel)]="participant.name"
+                        required
+                        #participantName="ngModel"
+                      />
+                      <small
+                        class="form-text text-muted danger"
+                        *ngIf="
+                          participantName.invalid &&
+                          (isFormSubmitted || participantName.touched)
+                        "
+                      >
+                        {{ required_field_Error }}</small
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="surgeonBio" class="primary-color"
+                        >DATE OF BIRTH:</label
+                      >
+                      <input
+                        type="date"
+                        id="participantDOB"
+                        name="participantDOB"
+                        placeholder="Date of Birth"
+                        class="form-control primary-color"
+                        [placeholder]="participant.dob"
+                        [(ngModel)]="participant.dob"
+                        #participantDOB="ngModel"
+                        [max]="getToday()"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-2">
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="stage" class="primary-color">STAGE:
+                        <span class="danger font-small-5">*</span>
+                      </label>
+                      <select
+                        type="text"
+                        id="stage"
+                        name="stage"
+                        class="form-control primary-color"
+                        [(ngModel)]="participant.stage"
+                        required
+                        #participantStage="ngModel"
+                      >
+                        <option
+                          *ngFor="let stage of stages"
+                          [value]="stage._id"
+                          [selected]="stage._id.selected == true"
+                          >{{ stage.name }}</option
+                        >
+                      </select>
+                      <small
+                        class="form-text text-muted danger"
+                        *ngIf="
+                        participantStage.invalid &&
+                          (isFormSubmitted || participantStage.touched)
+                        "
+                      >
+                        {{ required_field_Error }}</small
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="surgeonBio" class="primary-color"
+                        >DATE OF SURGERY:
+                        <span class="danger font-small-5">*</span></label
+                      >
+                      <input
+                        type="date"
+                        id="participantDateOfSurgery"
+                        name="participantDateOfSurgery"
+                        placeholder="Date of Surgery"
+                        class="form-control primary-color"
+                        [placeholder]="participant.dateOfSurgery"
+                        [(ngModel)]="participant.dateOfSurgery"
+                        required
+                        #participantDateOfSurgery="ngModel"
+                      />
+                      <small
+                        class="form-text text-muted danger"
+                        *ngIf="
+                          participantDateOfSurgery.invalid &&
+                          (isFormSubmitted || participantDateOfSurgery.touched)
+                        "
+                      >
+                        {{ required_field_Error }}</small
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <!-- personal details ends -->
+
+                <!-- contact details -->
+                <div
+                  class="row primary-color font-small-5 text-bold-500 details mt-4"
+                >
+                  Contact Details
+                </div>
+                <div class="row mt-2">
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="participantEmail" class="primary-color"
+                        >EMAIL:
+                        <span class="danger font-small-5">*</span></label
+                      >
+                      <input
+                        type="text"
+                        id="participantEmail"
+                        name="participantEmail"
+                        placeholder="Email"
+                        class="form-control primary-color"
+                        [(ngModel)]="participant.email"
+                        #participantEmail="ngModel"
+                        required
+                        [pattern]="emailValidator"
+                      />
+                      <small
+                        class="form-text text-muted danger"
+                        *ngIf="
+                          !participantEmail.value &&
+                          (isFormSubmitted || participantEmail.touched)
+                        "
+                      >
+                        {{ required_field_Error }}</small
+                      >
+                      <small
+                        class="form-text text-muted danger"
+                        *ngIf="
+                          participantEmail.invalid &&
+                          participantEmail.dirty &&
+                          participantEmail.value
+                        "
+                      >
+                        {{ incorrect_email_Error }}</small
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="participantPhone" class="primary-color"
+                        >PHONE:</label
+                      >
+                      <input
+                        type="text"
+                        id="participantPhone"
+                        name="participantPhone"
+                        placeholder="Phone"
+                        class="form-control primary-color"
+                        [(ngModel)]="participant.phone"
+                        #participantPhone="ngModel"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-2">
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="location" class="primary-color"
+                        >LOCATION:</label
+                      >
+                      <select
+                        *ngIf="isDataLoaded"
+                        type="text"
+                        id="location"
+                        name="location"
+                        class="form-control primary-color"
+                        [(ngModel)]="participant.location"
+                      >
+                        <option
+                          *ngFor="let location of locations"
+                          [value]="location._id"
+                          [selected]="location._id.selected == true"
+                          >{{ location.name }}</option
+                        >
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="addressZip" class="primary-color">ZIP:</label>
+                      <input
+                        type="text"
+                        id="addressZip"
+                        name="addressZip"
+                        class="form-control primary-color"
+                        [(ngModel)]="participant.address.zip"
+                        placeholder="ZIP"
+                        #addressZip="ngModel"
+                        [pattern]="zipValidator"
+                      />
+                      <small
+                        class="form-text text-muted danger"
+                        *ngIf="
+                          addressZip.invalid &&
+                          addressZip.dirty &&
+                          addressZip.value
+                        "
+                      >
+                        {{ "Enter valid ZIP code" }}</small
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-2">
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="streetAddress" class="primary-color"
+                        >STREET ADDRESS:</label
+                      >
+                      <textarea
+                        type="text"
+                        id="streetAddress"
+                        rows="4"
+                        name="streetAddress"
+                        placeholder="Address"
+                        class="form-control primary-color"
+                        [(ngModel)]="participant.address.streetAddress"
+                        #streetAddress="ngModel"
+                      ></textarea>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group m-0">
+                      <label for="participantCity" class="primary-color"
+                        >CITY:</label
+                      >
+                      <input
+                        type="text"
+                        id="participantCity"
+                        name="participantCity"
+                        placeholder="City"
+                        class="form-control primary-color"
+                        [(ngModel)]="participant.address.city"
+                        #participantCity="ngModel"
+                      />
+                    </div>
+                    <div class="form-group m-0">
+                      <label for="participantState" class="primary-color"
+                        >STATE:</label
+                      >
+                      <select
+                        type="text"
+                        id="participantState"
+                        name="participantState"
+                        class="form-control primary-color"
+                        [(ngModel)]="participant.address.state"
+                        #participantState="ngModel"
+                      >
+                        <option
+                          *ngFor="let state of states"
+                          [value]="state.stateCode"
+                          >{{ state.state }}</option
+                        >
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <!-- contact details ends-->
+              </div>
+            </form>
+            <div class="row mt-4">
+              <div class="col-md-9">
+                <button
+                  [disabled]="loading"
+                  (click)="formSubmitted()"
+                  class="font-small-3 btn btn-primary px-2"
+                >
+                  Create Participant
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

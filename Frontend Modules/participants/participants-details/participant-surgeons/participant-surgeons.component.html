@@ -1,0 +1,39 @@
+<div>
+  <div class="row col-12 mt-4 mr-0 pr-0">
+    <div class="col-lg-9">
+      <p class="primary-color font-medium-5 text-bold-500 pb-2 mb-0">
+        Linked Surgeons
+      </p>
+    </div>
+  </div>
+  <app-participants-table
+    [surgeons]="linkedSurgeons"
+    [linked]="true"
+    [loading]="loadingLinked"
+    (makeSurgeonDefault)="makeSurgeonDefault($event)"
+    (surgeonUnlinked)="linkUnlink($event)"
+  ></app-participants-table>
+  <div class="row col-12 mt-4 mr-0 pr-0">
+    <div class="col-lg-9">
+      <p class="primary-color font-medium-5 text-bold-500 pb-2 mb-0">
+        All Surgeons
+      </p>
+    </div>
+  </div>
+  <app-participants-table
+    [surgeons]="unlinkedSurgeons"
+    [loading]="loadingUnlinked"
+    (surgeonLinked)="linkUnlink($event)"
+  ></app-participants-table>
+  <ngb-pagination
+    class="d-flex justify-content-center pt-3"
+    *ngIf="!loading && pagination.totalPages > 1"
+    [(collectionSize)]="pagination.total"
+    [(page)]="pagination.page"
+    [(maxSize)]="pgConfig.maxSize"
+    [(rotate)]="pgConfig.rotate"
+    [(boundaryLinks)]="pgConfig.boundaryLinks"
+    [(size)]="pgConfig.size"
+    (pageChange)="getUnlinkedSurgeons($event)"
+  ></ngb-pagination>
+</div>

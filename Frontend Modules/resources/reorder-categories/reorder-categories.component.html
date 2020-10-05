@@ -1,0 +1,70 @@
+<section id="extended">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body bg-secondary-color">
+          <div class="card-block">
+            <table class="table table-responsive-md text-center">
+              <thead class="primary-color bg-secondary-color font-small-1">
+                <tr>
+                  <th></th>
+                  <th>#</th>
+                  <th>NAME</th>
+                  <th>APPLICABLE</th>
+                  <th>PICTURE</th>
+                  <th>UPDATED AT</th>
+                </tr>
+              </thead>
+              <tbody
+                [dragula]="DRAGDROP_ID"
+                [(dragulaModel)]="resourceCategories"
+              >
+                <tr
+                  *ngFor="
+                    let resourceCategory of resourceCategories;
+                    let i = index
+                  "
+                  class="vertically-mid"
+                >
+                  <td><i class="fa fa-reorder fa-lg"></i></td>
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    {{ resourceCategory.name }}
+                  </td>
+                  <td>
+                    {{ (resourceCategory.applicable | titlecase) || "-" }}
+                  </td>
+                  <td>
+                    <img
+                      *ngIf="resourceCategory.picture"
+                      [src]="resourceCategory.picture"
+                      height="60"
+                      width="60"
+                    /><span *ngIf="!resourceCategory.picture">-</span>
+                  </td>
+                  <td>{{ resourceCategory.updatedAt | date: "medium" }}</td>
+                </tr>
+                <tr *ngIf="loading">
+                  <td colspan="7" class="blue-text">Loading...</td>
+                </tr>
+                <tr *ngIf="!loading && resourceCategories.length == 0">
+                  <td colspan="7" class="blue-text">
+                    No resource categories found
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <a (click)="cancel()" class="btn btn-primary white float-right px-2 ml-1">
+        Cancel</a
+      >
+      <a (click)="onSubmit()" class="btn btn-primary white float-right px-2">
+        Save Reordering</a
+      >
+    </div>
+  </div>
+</section>

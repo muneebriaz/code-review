@@ -1,0 +1,158 @@
+<div class="row">
+  <div class="col-md-6">
+    <app-content-header
+      [heading]="'Participants'"
+      [subHeading]="'Participants List'"
+    >
+    </app-content-header>
+  </div>
+
+  <div class="col-md-6">
+    <a
+      *ngIf="role === ROLES.ADMIN"
+      [routerLink]="['/participants/create']"
+      class="btn btn-primary white float-right header-button px-2"
+    >
+      <i class="fa fa-plus"></i> Add Participant</a
+    >
+    <button
+      (click)="download()"
+      id="btn-export"
+      class="btn btn-primary white float-right header-button"
+    >
+      <i class="ft-download"></i>
+      Export
+    </button>
+  </div>
+
+  <!-- <div class="col-md-6">
+    <button
+      id="btn-export"
+      class="btn btn-primary white float-right header-button px-2"
+    >
+      <i class="ft-download "></i>
+      Export
+      <i class="ft-chevron-down"></i>
+    </button>
+    <button class="btn btn-primary white float-right header-button px-2">
+      <i class="ft-filter"></i>
+      Filter
+    </button>
+  </div> -->
+</div>
+
+<section id="extended">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body bg-secondary-color">
+          <div class="card-block">
+            <table class="table table-responsive-md text-center">
+              <thead class="primary-color bg-secondary-color font-small-1">
+                <tr>
+                  <th>#</th>
+                  <th>NAME</th>
+                  <th>PHONE</th>
+                  <th>TYPE</th>
+                  <th>STAGE</th>
+                  <th>STATUS</th>
+                  <th>DATE ENROLLED</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let participant of participants; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <a
+                      class="tertiary-color"
+                      [routerLink]="['/participants', participant._id]"
+                      >{{ participant.name }}</a
+                    >
+                  </td>
+                  <td>{{ participant.phone || "-" }}</td>
+                  <td>{{ participant.type | titlecase }}</td>
+                  <td>{{ participant?.stage?.name }}</td>
+                  <td>{{ participant.status | titlecase }}</td>
+                  <td>{{ participant.createdAt | date: "medium" }}</td>
+                  <td>
+                    <a
+                      class="primary-color"
+                      [routerLink]="['/participants', participant._id]"
+                      title="Edit"
+                    >
+                      <i class="ft-edit mr-2 font-medium-3"></i>
+                    </a>
+                    <ng-container *ngIf="participant.status !== 'invited'">
+                      <a
+                        class="ml-1"
+                        (click)="
+                          suspendActiveParticipant(
+                            participant._id,
+                            participant.status
+                          )
+                        "
+                      >
+                        <i
+                          *ngIf="participant.status === 'active'"
+                          style="color: red;"
+                          class="ft-user-x mr-2 font-medium-3"
+                          title="Suspend"
+                        ></i>
+                        <i
+                          *ngIf="participant.status === 'suspended'"
+                          style="color: green;"
+                          class="ft-user-check mr-2 font-medium-3"
+                          title="Activate"
+                        ></i>
+                      </a>
+                    </ng-container>
+                    <ng-container *ngIf="participant.status === 'invited'">
+                      <a
+                        class="ml-1"
+                        title="Participant in invited state can't be suspended/activated"
+                      >
+                        <i
+                          style="color: grey;"
+                          class="ft-user mr-2 font-medium-3"
+                        ></i>
+                      </a>
+
+                      <a
+                        *ngIf="role !== ROLES.SURGEON"
+                        (click)="resendInviteLink(participant.email)"
+                        class="ml-1"
+                        title="Resend invite link"
+                      >
+                        <i class="ft-arrow-up-right mr-2 font-medium-3"></i>
+                      </a>
+                    </ng-container>
+                  </td>
+                </tr>
+                <tr *ngIf="loading">
+                  <td colspan="8" class="blue-text">Loading...</td>
+                </tr>
+                <tr *ngIf="!loading && participants.length === 0">
+                  <td colspan="8" class="blue-text">
+                    No participant found
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <ngb-pagination
+              class="d-flex justify-content-center pt-3"
+              *ngIf="!loading && pagination.totalPages > 1"
+              [(collectionSize)]="pagination.total"
+              [(page)]="pagination.page"
+              [(maxSize)]="pgConfig.maxSize"
+              [(rotate)]="pgConfig.rotate"
+              [(boundaryLinks)]="pgConfig.boundaryLinks"
+              [(size)]="pgConfig.size"
+              (pageChange)="getParticipants($event)"
+            ></ngb-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
